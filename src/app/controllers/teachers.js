@@ -1,5 +1,5 @@
 // exportação de funções para routes.js
-const { age, date } = require('../../lib/utils')
+const { age, date, graduation } = require('../../lib/utils')
 
 const Teacher = require('../models/Teacher')
 
@@ -14,7 +14,7 @@ module.exports = {
     },
     create(req, res) {
 
-
+        return res.render('teachers/create')
     },
     post(req, res) {
         const keys = Object.keys(req.body)
@@ -35,7 +35,7 @@ module.exports = {
    
         teacher.age = age(teacher.birth)
         teacher.subjects = teacher.subjects.split(",")
-
+        teacher.graduation = graduation(teacher.graduation)
         teacher.created_at = date(teacher.created_at).format
 
         return res.render("teachers/show", {teacher})
@@ -44,23 +44,39 @@ module.exports = {
     },
     edit(req, res) {
 
-    return 
+        Teacher.find(req.params.id, function(teacher){
+            if (!teacher) return res.send("Teacher not found!")
+        
+             teacher.birth = date(teacher.birth).iso
+            teacher.graduation = graduation(teacher.graduation)
+             teacher.created_at = date(teacher.created_at).format
+     
+             return res.render("teachers/edit", {teacher})
+         })
+     
+     
 
     },
     put(req, res) {
         const keys = Object.keys(req.body)
     
         for(key of keys) {
-           if (req.body[key] == "")
+           if (req.body[key] == "") {
            return res.send('Please, fill all fields!')
         }
+    }
 
-    return 
+    Teacher.update(req.body, function(){
+        return res.redirect(`/teachers/${req.body.id}`)
+    })
+   
     },
     delete(req, res) {
         
-    return 
+        Teacher.delete(req.body.id, function(){
+            return res.redirect(`/teachers`)
 
-    },
+    })
 }
 
+}

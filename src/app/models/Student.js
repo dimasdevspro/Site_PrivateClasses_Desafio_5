@@ -4,7 +4,7 @@ const { date } = require('../../lib/utils')
 module.exports = {
     all(callback) {
         db.query(`SELECT * 
-        FROM teachers
+        FROM students
         ORDER BY name ASC`, function(err, results){
             if(err)  throw `Database Error! ${err}`
             
@@ -14,36 +14,34 @@ module.exports = {
     create(data, callback) {
 
 const query = `
-        INSERT INTO teachers (
+        INSERT INTO students (
             avatar_url,
             name,
             birth,
+            email,
             graduation,
-            classes,
-            subjects,
-            created_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+            workload
+        ) VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id
 
 `
 const values = [
 data.avatar_url,
 data.name,
-    date(data.birth).iso,
+date(data.birth).iso,
+data.email,
 data.graduation,
-data.classes,
-data.subjects,
-    date(Date.now()).iso
+data.workload
 ]
         db.query(query, values, function(err, results){
-          if(err)  throw `Database Error! ${err}`
+          if(err) throw `Database Error! ${err}`
 
          callback(results.rows[0])
         })
     },
     find(id, callback) {
         db.query(`SELECT * 
-        FROM teachers 
+        FROM students 
         WHERE id = $1`, [id], function(err, results){
             if(err)  throw `Database Error! ${err}`
             callback(results.rows[0])
@@ -51,13 +49,13 @@ data.subjects,
     },
     update(data, callback) {
         const query = `
-    UPDATE teachers SET
+    UPDATE students SET
         avatar_url=($1),
         name=($2),
         birth=($3),
-        graduation=($4),
-        classes=($5),
-        subjects=($6)
+        email=($4),
+        graduation=($5),
+        workload=($6)
     WHERE id = $7
         `
 
@@ -65,9 +63,9 @@ data.subjects,
             data.avatar_url,
             data.name,
             date(data.birth).iso,
+            data.email,
             data.graduation,
-            data.classes,
-            data.subjects,
+            data.workload,
             data.id
         ]
 
@@ -78,7 +76,7 @@ data.subjects,
         })
     },
     delete(id, callback) {
-        db.query(`DELETE FROM teachers WHERE id = $1`, [id], function(err, results){
+        db.query(`DELETE FROM students WHERE id = $1`, [id], function(err, results){
             if(err)  throw `Database Error! ${err}`
 
             return callback()
