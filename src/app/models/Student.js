@@ -20,8 +20,9 @@ const query = `
             birth,
             email,
             graduation,
-            workload
-        ) VALUES ($1, $2, $3, $4, $5, $6)
+            workload,
+            teacher_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING id
 
 `
@@ -31,7 +32,8 @@ data.name,
 date(data.birth).iso,
 data.email,
 data.graduation,
-data.workload
+data.workload,
+data.teacher
 ]
         db.query(query, values, function(err, results){
           if(err) throw `Database Error! ${err}`
@@ -40,9 +42,10 @@ data.workload
         })
     },
     find(id, callback) {
-        db.query(`SELECT * 
+        db.query(`SELECT students.*, teachers.name AS teacher_name
         FROM students 
-        WHERE id = $1`, [id], function(err, results){
+        LEFT JOIN teachers ON (students.teacher_id = teachers.id)
+        WHERE students.id = $1`, [id], function(err, results){
             if(err)  throw `Database Error! ${err}`
             callback(results.rows[0])
         })
@@ -55,8 +58,9 @@ data.workload
         birth=($3),
         email=($4),
         graduation=($5),
-        workload=($6)
-    WHERE id = $7
+        workload=($6),
+        teacher_id=($7)
+    WHERE id = $8
         `
 
         const values = [
@@ -66,6 +70,7 @@ data.workload
             data.email,
             data.graduation,
             data.workload,
+            data.teacher,
             data.id
         ]
 
@@ -80,6 +85,48 @@ data.workload
             if(err)  throw `Database Error! ${err}`
 
             return callback()
+        })
+    },
+    teachersSelectOptions(callback) {
+        db.query(`SELECT name, id FROM teachers`, function(err, results){
+            if (err) throw 'Database Error!'
+
+            callback(results.rows)
+        })
+    },
+    paginate(params) {
+        const { filter, limit, offset, callback } = params
+
+        let query = "",
+        filterQuery = "",
+        totalQuery = `(
+            SELECT count(*) FROM students
+        ) AS total`
+
+
+        if (filter ){
+
+            filterQuery = `
+            WHERE students.name ILIKE '%${filter}%'
+            OR students.email ILIKE '%${filter}%'
+            `
+
+            totalQuery = `(
+                SELECT count(*) FROM students
+                ${filterQuery}
+            ) AS total`
+        }
+
+        query =`
+        SELECT students.*, ${totalQuery} 
+        FROM students
+        ${filterQuery}
+        LIMIT $1 OFFSET $2
+        `
+
+        db.query(query, [limit, offset], function(err, results){
+            if (err) throw `Database Error! ${err}` 
+            callback(results.rows)
         })
     }
 }

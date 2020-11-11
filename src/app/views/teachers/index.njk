@@ -1,26 +1,51 @@
 {% extends "layout.njk"%}
 
 {% block content %}
-<div class="card table-container">
-    <a href="/teachers/create">Novo</a>
- <table width="100%">
-     <thead>
-         <tr>
-             <th>Professor</th>
-             <th>Disciplinas</th>
-             <th>Ação</th>
-         </tr>
-     </thead>
-     <tbody>
-         {% for teacher in teachers %}
-         <tr>
-             <td><span style="background-image: url({{teacher.avatar_url}})"></span>
-                 {{teacher.name}}</td>
-             <td>{{teacher.subjects}}</td>
-             <td><a href="/teachers/{{teacher.id}}">ver</a></td>
-             {% endfor%}
-         </tr>
-     </tbody>
- </table>
-</div>
-{% endblock %}
+    <div class="card table-container">
+
+        <div class="header">
+            <a class="button" href="/teachers/create">Novo</a>
+            <form action="/teachers" method="GET">
+            <input 
+            type="text" 
+            name="filter" 
+            placeholder="filtrar por nome ou disciplina"
+            value="{{filter}}"
+            >
+            <button type="submit">Filtrar</button>
+                
+            </form>
+
+        </div>
+
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th>Professor</th>
+                    <th>Disciplinas</th>
+                    <th>Alunos</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                    <tr>
+                        <td>
+                            <span style="background-image: url({{teacher.avatar_url}})"></span>
+                            {{teacher.name}}</td>
+                        <td>{{teacher.subjects}}</td>
+                        <td>{{teacher.total_students}}</td>
+                        <td>
+                            <a href="/teachers/{{teacher.id}}">ver</a>
+                        </td>
+                        {% endfor%}
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination"
+                data-page={{pagination.page}}
+                data-total={{pagination.total}}
+                data-filter={{filter}}
+      ></div>
+        </div>
+    {% endblock %}

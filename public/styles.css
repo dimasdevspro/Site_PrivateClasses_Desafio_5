@@ -266,7 +266,8 @@ tbody tr td:first-child span {
 }
 
 tbody tr td:last-child a,
-.table-container a {
+.table-container a,
+.table-container button {
   background-color: var(--color-honey);
   padding: 8px 16px;
   text-decoration: none;
@@ -274,6 +275,7 @@ tbody tr td:last-child a,
   color: white;
   font-size: 12px;
   border-radius: 4px;
+  text-align: center;
 }
 
 .table-c0ntainer thead tr th:last-child, 
@@ -284,4 +286,66 @@ td:last-child {
 .table-container a {
   margin-bottom: 16px;
   display: inline-block;
+}
+
+/* ========= FILTERS ========== */
+.table-container .header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  margin-botton: 32px;
+}
+
+.table-container .header a {
+  margin: 0;
+  width: 120px;
+}
+
+.table-container .header form{
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items:center;
+  grid-gap: 8px;
+}
+
+.table-container .header form input {
+  border: 1px solid #eee;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+
+.table-container .header form button {
+  margin: 0;
+}
+
+/*pagination*/
+
+.table-container {
+  display: grid;
+  grid-template: 64px 1fr 16px / 1fr;
+}
+
+.table-container .header {
+  margin: 0;
+  align-self: start;
+
+}
+
+.table-container .pagination{
+  margin: 0;
+  align-self: end;
+  justify-self: center;
+  
+}
+
+.pagination a,
+.pagintation span {
+  color: var(--color-honey);
+  margin-right: 16px;
+  background-color: transparent;
+}
+
+.pagination a:hover {
+  filter: brightness(0.3);
+  border-bottom: 1px solid var(--color-honey)
 }
