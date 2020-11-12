@@ -14,8 +14,7 @@ function paginate(selectedPage, totalPages) {
     oldPage;
 
   for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
-    pages.push(currentPage);
-
+    
     const firstAndLastPage = currentPage == 1 || currentPage == totalPages;
 
     const pagesAfterSelectedPage = currentPage <= selectedPage + 2;
@@ -55,14 +54,16 @@ function createPagination(pagination) {
     } else {
       if (filter) {
         elements += `<a href="?page=${page}&filter=${filter}">${page}</a>`;
-      } else elements += `<a href="?page=${page}">${page}</a>`;
+      } else {
+        elements += `<a href="?page=${page}">${page}</a>`;
     }
   }
 
   pagination.innerHTML = elements;
 }
+}
 
-const pagination = document.querySelector(".pagination");
+pagination = document.querySelector(".pagination");
 
 if (pagination) {
   createPagination(pagination);

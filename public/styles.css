@@ -194,8 +194,10 @@ a.button {
 }
 
 #button-update:hover,
-a.button:hover {
-  border: 3px solid var(--color-mist);
+a.button:hover,
+.table-container .header form button:hover,
+tbody tr td:last-child a:hover{
+  border: 2px solid var(--color-mist);
   box-shadow: 1px 2px 3px 4px;
   background-color: var(--color-honey);
   color: var(--color-cerulean);
@@ -268,6 +270,7 @@ tbody tr td:first-child span {
 tbody tr td:last-child a,
 .table-container a,
 .table-container button {
+  border: 2px solid var(--color-mist);
   background-color: var(--color-honey);
   padding: 8px 16px;
   text-decoration: none;
@@ -316,6 +319,7 @@ td:last-child {
 
 .table-container .header form button {
   margin: 0;
+  cursor: pointer;
 }
 
 /*pagination*/
@@ -333,7 +337,7 @@ td:last-child {
 
 .table-container .pagination{
   margin: 0;
-  align-self: end;
+
   justify-self: center;
   
 }
@@ -348,4 +352,17 @@ td:last-child {
 .pagination a:hover {
   filter: brightness(0.3);
   border-bottom: 1px solid var(--color-honey)
+}
+
+a.button .link{
+  padding: 8px 32px;
+  background-color: var(--color-cerulean);
+  border: 2px solid var(--color-mist);
+  border-radius: 4px;
+  margin-top: 16px;
+  width: 100%;
+  color: var(--color-mist);
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
 }
